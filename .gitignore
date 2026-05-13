@@ -1,0 +1,14 @@
+*/.cargo
+/sample_codes
+/.memo
+/kohan-ls/out
+/kohan-ls/server/
+*/node_modules
+*/target
+*/.vscode
+
+/compiler_asm
+/compiler_bin
+/compiler_lua
+/compiler_rust
+/compiler_ts
