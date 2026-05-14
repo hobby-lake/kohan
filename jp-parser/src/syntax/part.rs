@@ -64,16 +64,13 @@ pub fn danraku_bunkai(text: &str) -> Vec<String> {
     let mut last = 0;
 
     for (pos, word) in positions {
-        // 接続詞の直前までを追加
         if last < pos {
             result.push(text[last..pos].to_string());
         }
-        // 接続詞そのものを追加
         result.push(word.to_string());
         last = pos + word.len();
     }
 
-    // 最後の残り
     if last < text.len() {
         result.push(text[last..].to_string());
     }

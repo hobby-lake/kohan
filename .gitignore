@@ -6,7 +6,6 @@
 */node_modules
 */target
 */.vscode
-*/test_file
 
 /compiler_asm
 /compiler_bin
