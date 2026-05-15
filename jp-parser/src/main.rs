@@ -11,7 +11,7 @@ use crate::encode::encode;
 
 fn main() {
     println!("[LOG] Queue started");
-    let source_code = fs::read_to_string(r"D:/.prj/Language/kohan/test_file/test.k");
+    let source_code = fs::read_to_string(r"D:/.prj/Language/kohan/test_file/test.khn");
 
     let results = syntax::koubun_kaiseki(source_code.unwrap());
     let unwrapped = results.as_ref().unwrap();
