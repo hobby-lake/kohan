@@ -1,24 +1,6 @@
-use crate::syntax::meta::{KOUBUN, YOUSO};
+use crate::meta::{KOUBUN, YOUSO};
 
 /// 基本型・基本要素
-
-pub enum Fuzokugo {
-    Ha,// は
-}
-
-/// 品詞の大枠
-/// 使用者定義で使うもの、標準定義されているものを自立語として定義し、それ以外を付属語とする。
-pub enum Hinshi {
-    Jiritsugo,// 自立語
-    Fuzokugo(Fuzokugo),// 付属語
-}
-
-pub enum KihonKata {
-    Moji,// 文字
-    Su,// 数
-    Seigo,// 正誤
-}
-
 pub enum KihonYouso {
     Touka, // 等価
     Wa, // 和
@@ -26,7 +8,13 @@ pub enum KihonYouso {
     Hazu, // はず(推論)
     Naru, // 成る(代入)
     Beki, // べき(強制)
+    Dearu, // である・であり(肯定)
+    Moshi, // もし・もしも(仮定)
+    Nara, // なら(仮定)
+    Denai, // でない(否定)
+    Hikaku, // 比較子
 }
+
 impl KihonYouso {
     pub fn from_str(s: &str) -> Option<Self> {
         match s {
@@ -36,12 +24,17 @@ impl KihonYouso {
             "はず" => Some(Self::Hazu),
             "成る" | "なる" => Some(Self::Naru),
             "べき" => Some(Self::Beki),
+            "である" | "であり" => Some(Self::Dearu),
+            "もし" | "もしも" => Some(Self::Moshi),
+            "なら" => Some(Self::Nara),
+            "でない" => Some(Self::Denai),
+            "以上" | "以下" | "未満" | "より大きい" | "より小さい" | "等しい" => Some(Self::Hikaku),
             _ => None,
         }
     }
     
     pub fn all_words() -> &'static [&'static str] {
-        &["等価", "和", "差", "はず", "成る", "べき"]
+        &["等価", "和", "差", "はず", "成る", "べき", "である", "であり" , "もし", "もしも", "なら", "でなければ", "以上", "以下", "未満", "より大きい", "より小さい", "等しい"]
     }
 }
 
@@ -57,7 +50,7 @@ impl YousoTyuusyutsu for str {
     }
 }
 
-/// 接続詞の位置を検出
+/// 位置を検出
 fn youso_ichi(text: &str) -> Vec<(usize, &'static str)> {
     let mut result = Vec::new();
 
@@ -110,6 +103,9 @@ pub fn bunkai(koubun_s:Vec<String>) -> Result<Vec<String>, &'static str> {
         for koubun in m_koubun_s {
             let ress = kutou_bunkai(&koubun.to_string());
             for res in ress {
+
+                
+
                 temp.push(res);
             }
         }

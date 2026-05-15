@@ -1,6 +1,6 @@
 // 書籍
 
-use crate::syntax::meta::{RON};
+use crate::meta::{RON};
 
 // 書籍から論へ
 pub fn bunkai (syoseki:String) -> Vec<String>{

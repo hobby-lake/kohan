@@ -1,6 +1,6 @@
 // 論
 
-use crate::syntax::meta::{DANRAKU, RON};
+use crate::meta::{DANRAKU, RON};
 
 ///順接
 pub enum Junsetsu {
@@ -250,7 +250,7 @@ impl SetsuzokushiExtract for str {
     }
 }
 
-/// 接続詞の位置を検出
+/// 位置を検出
 fn setsuzokuichi(text: &str) -> Vec<(usize, &'static str)> {
     let mut result = Vec::new();
 
@@ -280,16 +280,13 @@ pub fn ron_bunkai(text: &str) -> Vec<String> {
     let mut last = 0;
 
     for (pos, word) in positions {
-        // 接続詞の直前までを追加
         if last < pos {
             result.push(text[last..pos].to_string());
         }
-        // 接続詞そのものを追加
         result.push(word.to_string());
         last = pos + word.len();
     }
 
-    // 最後の残り
     if last < text.len() {
         result.push(text[last..].to_string());
     }

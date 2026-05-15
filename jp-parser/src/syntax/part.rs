@@ -2,7 +2,7 @@
 
 use std::vec;
 
-use crate::syntax::meta::{DANRAKU, KOUBUN};
+use crate::meta::{DANRAKU, KOUBUN};
 
 pub enum Kutouten {
     Kuten,
@@ -34,7 +34,7 @@ impl KutoutenExtract for str {
     }
 }
 
-/// 接続詞の位置を検出
+/// 位置を検出
 fn kutouichi(text: &str) -> Vec<(usize, &'static str)> {
     let mut result = Vec::new();
 
