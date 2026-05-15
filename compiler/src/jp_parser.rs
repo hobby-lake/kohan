@@ -1,17 +1,14 @@
 // src/main.rs
-#[allow(unused)]
-mod syntax;// 品詞分解
-#[allow(unused)]
-mod encode;// 符号化
-#[allow(unused)]
-mod meta;// 各セクション識別データ
+pub mod syntax;// 品詞分解
+pub mod encode;// 符号化
+pub mod meta;// 各セクション識別データ
 
 use std::fs;
-use crate::encode::encode;
+use encode::encode;
 
-fn main() {
-    println!("[LOG] Queue started");
-    let source_code = fs::read_to_string(r"D:/.prj/Language/kohan/test_file/test.k");
+pub fn parse(file_path:&'static str) -> String {
+    println!("[LOG] Parsing queue started");
+    let source_code = fs::read_to_string(file_path);
 
     let results = syntax::koubun_kaiseki(source_code.unwrap());
     let unwrapped = results.as_ref().unwrap();
@@ -31,5 +28,7 @@ fn main() {
         result_str = format!("{}{}", result_str, result.as_str()); 
     }
     println!("{}", result_str);
-    println!("[LOG] Queue ended");
+    println!("[LOG] Parsing queue ended");
+
+    result_str
 }

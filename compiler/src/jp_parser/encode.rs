@@ -1,5 +1,6 @@
-use crate::meta::{ENCODED, FUZOKU};
+use crate::jp_parser::meta::{ENCODED, FUZOKU};
 
+// To-Do いくつかの関数に分割すること。ながい。
 pub fn encode(array: Vec<String>) -> Result<Vec<String>, &'static str> {
     let mut m_array = array;
     let id = m_array.remove(0);
@@ -87,7 +88,6 @@ pub fn encode(array: Vec<String>) -> Result<Vec<String>, &'static str> {
                         }
                     },
                     "と" => {
-                        
                         elm = String::from("&");
                         is_parallel = true;
                     },
