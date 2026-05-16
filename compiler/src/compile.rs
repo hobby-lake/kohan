@@ -3,6 +3,8 @@ mod categorize;
 mod typescript;
 
 pub fn execute(encoded_data:String) {
-    let code_array = array::convert(encoded_data);
-    categorize::execute(code_array);
+    let code_vector = array::convert(encoded_data);
+    let code_hash = categorize::execute(code_vector);
+
+    
 }
