@@ -1,7 +1,5 @@
 // 論
 
-use crate::jp_parser::meta::{DANRAKU, RON};
-
 ///順接
 pub enum Junsetsu {
     Dakara,
@@ -295,19 +293,14 @@ pub fn ron_bunkai(text: &str) -> Vec<String> {
 }
 
 // 論から段落へ
-pub fn bunkai(rons:Vec<String>) -> Result<Vec<String>, &'static str> {
+pub fn bunkai(rons: &mut Vec<String>) -> Vec<String> {
     let mut m_rons = rons;
-    let id  = m_rons.remove(0);
-    if id == String::from(RON) {
-        let mut temp: Vec<String> = vec![String::from(DANRAKU)];
-        for ron in m_rons {
-            let ress = ron_bunkai(&ron.to_string());
-            for res in ress {
-                temp.push(res);
-            }
+    let mut temp: Vec<String> = vec![];
+    for ron in m_rons {
+        let ress = ron_bunkai(&ron.to_string());
+        for res in ress {
+            temp.push(res);
         }
-        Ok(temp)
-    } else {
-        Err("[ERR] 入力が 論 ではありません。")
     }
+    temp
 }

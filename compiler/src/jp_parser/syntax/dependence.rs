@@ -1,7 +1,6 @@
 use crate::jp_parser::{
-    meta::{FUZOKU, YOUSO},
     syntax::{
-        essence::KihonYouso
+        essence::KihonYouso, part::Bunkugiri
     }
 };
 
@@ -13,6 +12,7 @@ pub enum Fuzokugo {
     No, // 関連
     Ga, // 確認
     To, // 並列
+    De, // 
     Suru, // 動作
 }
 
@@ -26,7 +26,7 @@ impl Fuzokugo {
                     "の" => Some(Self::No),
                     "が" => Some(Self::Ga),
                     "と" => Some(Self::To),
-                    "する" | "して" => Some(Self::Suru),
+                    "で" => Some(Self::De),
                     _ => None,
                 }
             },
@@ -35,7 +35,7 @@ impl Fuzokugo {
     }
     
     pub fn all_words() -> &'static [&'static str] {
-        &["は", "を", "の", "が", "と", "する", "して"]
+        &["は", "を", "の", "が", "と", "で"]
     }
 }
 
@@ -96,23 +96,15 @@ pub fn fuzoku_bunkai(text: &str) -> Vec<String> {
 }
 
 // 構文から要素の配列へ
-pub fn bunkai(youso_s:Vec<String>) -> Result<Vec<String>, &'static str> {
-    let mut m_youso_s = youso_s;
-    let id = m_youso_s.remove(0);
-    if id == String::from(YOUSO) {
-        let mut temp: Vec<String> = vec![String::from(FUZOKU)];
-        for youso in m_youso_s {
-            let ress = fuzoku_bunkai(&youso.to_string());
-            for res in ress {
-
-                
-
-                temp.push(res);
-            }
+pub fn bunkai(rons: &mut Vec<String>) -> Vec<String> {
+    let mut m_rons = rons;
+    let mut temp: Vec<String> = vec![];
+    for ron in m_rons {
+        let ress = fuzoku_bunkai(&ron.to_string());
+        for res in ress {
+            temp.push(res);
         }
-        Ok(temp)
-    } else {
-        Err("[ERR] 入力が 要素 ではありません")
     }
+    temp
 }
 

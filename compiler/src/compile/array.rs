@@ -1,6 +1,6 @@
 pub fn convert(encoded_data:String) -> Vec<String> {
     let mut code_array:Vec<String> = encoded_data
-        .split(|c| c == '、' || c == '。')
+        .split(|c| c == '、' || c == '。' || c == '|')
         .filter(|s| !s.is_empty())
         .map(|s| s.to_string())
         .collect();

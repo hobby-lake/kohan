@@ -1,40 +1,55 @@
-use crate::jp_parser::meta::{KOUBUN, YOUSO};
+use crate::jp_parser::{
+    syntax::part::Bunkugiri
+};
 
 /// 基本型・基本要素
 pub enum KihonYouso {
-    Touka, // 等価
     Wa, // 和
     Sa, // 差
     Hazu, // はず(推論)
     Naru, // 成る(代入)
     Beki, // べき(強制)
-    Dearu, // である・であり(肯定)
+    Aru, // である・であり(肯定)
     Moshi, // もし・もしも(仮定)
     Nara, // なら(仮定)
-    Denai, // でない(否定)
+    Nai, // ない(否定)
     Hikaku, // 比較子
+    Kurikaesu, // 繰り返す
 }
 
 impl KihonYouso {
     pub fn from_str(s: &str) -> Option<Self> {
-        match s {
-            "等価" => Some(Self::Touka),
-            "和" => Some(Self::Wa),
-            "差" => Some(Self::Sa),
-            "はず" => Some(Self::Hazu),
-            "成る" | "なる" => Some(Self::Naru),
-            "べき" => Some(Self::Beki),
-            "である" | "であり" => Some(Self::Dearu),
-            "もし" | "もしも" => Some(Self::Moshi),
-            "なら" => Some(Self::Nara),
-            "でない" => Some(Self::Denai),
-            "以上" | "以下" | "未満" | "より大きい" | "より小さい" | "等しい" => Some(Self::Hikaku),
+        match  Bunkugiri::from_str(s) {
+            None => match s {
+                "はず" => Some(Self::Hazu),
+                "成る" | "なる" => Some(Self::Naru),
+                "べき" => Some(Self::Beki),
+                "ある" | "あり" => Some(Self::Aru),
+                "もし" | "もしも" => Some(Self::Moshi),
+                "なら" => Some(Self::Nara),
+                "ない" => Some(Self::Nai),
+                "以上" | "以下" | "未満" | "より大きい" | "より小さい" | "等しい" => Some(Self::Hikaku),
+                "繰り返す" | "繰り返し" => Some(Self::Kurikaesu),
+                _ => None,
+            },
             _ => None,
         }
+        
     }
     
     pub fn all_words() -> &'static [&'static str] {
-        &["等価", "和", "差", "はず", "成る", "べき", "である", "であり" , "もし", "もしも", "なら", "でなければ", "以上", "以下", "未満", "より大きい", "より小さい", "等しい"]
+        &[
+            "はず", 
+            "成る", 
+            "べき", 
+            "ある", 
+            "あり" , 
+            "もし", "もしも", 
+            "なら", 
+            "ない", 
+            "以上", "以下", "未満", "より大きい", "より小さい", "等しい", 
+            "繰り返す", "繰り返し"
+        ]
     }
 }
 
@@ -95,22 +110,14 @@ pub fn kutou_bunkai(text: &str) -> Vec<String> {
 }
 
 // 構文から要素の配列へ
-pub fn bunkai(koubun_s:Vec<String>) -> Result<Vec<String>, &'static str> {
-    let mut m_koubun_s = koubun_s;
-    let id = m_koubun_s.remove(0);
-    if id == String::from(KOUBUN) {
-        let mut temp: Vec<String> = vec![String::from(YOUSO)];
-        for koubun in m_koubun_s {
-            let ress = kutou_bunkai(&koubun.to_string());
-            for res in ress {
-
-                
-
-                temp.push(res);
-            }
+pub fn bunkai(rons: &mut Vec<String>) -> Vec<String> {
+    let mut m_rons = rons;
+    let mut temp: Vec<String> = vec![];
+    for ron in m_rons {
+        let ress = kutou_bunkai(&ron.to_string());
+        for res in ress {
+            temp.push(res);
         }
-        Ok(temp)
-    } else {
-        Err("[ERR] 入力が 構文 ではありません")
     }
+    temp
 }

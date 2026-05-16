@@ -5,17 +5,25 @@ pub enum CodeType {
     None,
     Define,
     If,
-    For
+    Ok,
+    Ng,
+    Repeat
 }
 
 pub fn execute(code_array: Vec<String>) {
     let mut code_hash: HashMap<(usize, CodeType), String> = HashMap::new();
 
     for (index, code_line) in code_array.iter().enumerate() {
-        let key = if code_line.contains("!") {
+        let key = if code_line.contains(":def") {
             (index, CodeType::Define)
-        } else if code_line.contains("if") {
+        } else if code_line.contains("if:") {
             (index, CodeType::If)
+        } else if code_line.contains("ok:") {
+            (index, CodeType::Ok)
+        } else if code_line.contains("ng:") {
+            (index, CodeType::Ng)
+        } else if code_line.contains(":repeat") {
+            (index, CodeType::Repeat)
         } else {
             (index, CodeType::None)
         };

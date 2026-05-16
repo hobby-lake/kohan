@@ -1,44 +1,51 @@
-// 段落
+use crate::jp_parser::{
+    syntax::{
+        essence::KihonYouso, part::Bunkugiri
+    }
+};
 
-use std::vec;
 
-pub enum Bunkugiri {
-    Kuten,
-    Touten,
-    Koto,
+/// 基本型・基本要素
+pub enum Tanni {
+    Kai,
 }
-impl Bunkugiri {
+
+impl Tanni {
     pub fn from_str(s: &str) -> Option<Self> {
-        match s {
-            "。" => Some(Self::Kuten),
-            "、" => Some(Self::Touten),
-            "こと" => Some(Self::Touten),
-            _ => None,
+        match KihonYouso::from_str(s) {
+            None => {
+                match s {
+                    "回" => Some(Self::Kai),
+                    _ => None,
+                }
+            },
+            _ => None
         }
+        
     }
     
     pub fn all_words() -> &'static [&'static str] {
-        &["。", "、", "こと"]
+        &["回",]
     }
 }
 
-trait KutoutenExtract {
-    fn extract_kutouten(&self) -> Vec<Bunkugiri>;
+trait TanniTyuusyutu {
+    fn tanni_tyuusyutsu(&self) -> Vec<Tanni>;
 }
 
-impl KutoutenExtract for str {
-    fn extract_kutouten(&self) -> Vec<Bunkugiri> {
+impl TanniTyuusyutu for str {
+    fn tanni_tyuusyutsu(&self) -> Vec<Tanni> {
         self.split_whitespace()
-            .filter_map(|w| Bunkugiri::from_str(w))
+            .filter_map(|w| Tanni::from_str(w))
             .collect()
     }
 }
 
 /// 位置を検出
-fn kutouichi(text: &str) -> Vec<(usize, &'static str)> {
+fn tanni_ichi(text: &str) -> Vec<(usize, &'static str)> {
     let mut result = Vec::new();
 
-    for &word in Bunkugiri::all_words() {
+    for &word in Tanni::all_words() {
         let mut start = 0;
         while let Some(pos) = text[start..].find(word) {
             let abs = start + pos;
@@ -53,8 +60,8 @@ fn kutouichi(text: &str) -> Vec<(usize, &'static str)> {
     result
 }
 
-pub fn danraku_bunkai(text: &str) -> Vec<String> {
-    let positions = kutouichi(text);
+pub fn tanni_bunkai(text: &str) -> Vec<String> {
+    let positions = tanni_ichi(text);
 
     if positions.is_empty() {
         return vec![text.to_string()];
@@ -78,12 +85,12 @@ pub fn danraku_bunkai(text: &str) -> Vec<String> {
     result
 }
 
-// 段落から構文へ
+// 構文から要素の配列へ
 pub fn bunkai(rons: &mut Vec<String>) -> Vec<String> {
     let mut m_rons = rons;
     let mut temp: Vec<String> = vec![];
     for ron in m_rons {
-        let ress = danraku_bunkai(&ron.to_string());
+        let ress = tanni_bunkai(&ron.to_string());
         for res in ress {
             temp.push(res);
         }
